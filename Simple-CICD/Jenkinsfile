@@ -1,0 +1,18 @@
+pipeline{
+    agent { label 'jenkins-agent'}
+    stages {
+        stage("clone git app"){
+            steps{
+                git url: "https://github.com/MAHIRE-7/bookshelf.git", branch: "main"
+            }
+        }
+        
+        stage("Build Container"){
+            steps{
+                sh "docker build -t bookshelf:latest ."
+            }
+        }
+        
+        
+    }
+}
