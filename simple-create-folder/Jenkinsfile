@@ -1,0 +1,15 @@
+pipeline{
+    agent any 
+    stages{
+        stage("hello"){
+            steps {
+            echo "Creating Folder"
+                  }
+                      }
+        stage("creating Folder"){
+            steps {
+            sh "mkdir -p devops"
+            }
+                       }
+    }
+}
