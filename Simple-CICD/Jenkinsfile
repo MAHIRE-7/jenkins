@@ -12,6 +12,18 @@ pipeline{
                 sh "docker build -t bookshelf:latest ."
             }
         }
+        stage("Push Container"){
+            steps{
+                sh "docker login -u manodayahire -p "
+                sh "docker build -t bookshelf:latest ."
+            }
+        }
+
+        stage("Run Container"){
+            steps{
+                sh "docker compose up -d"
+            }
+        }
         
         
     }
