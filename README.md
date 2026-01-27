@@ -1,26 +1,41 @@
-# Jenkins CI/CD Pipeline
+# Jenkins CI/CD Project
 
-Simple Jenkins pipeline for building and deploying containerized applications.
+Complete Jenkins setup with CI/CD pipeline and automated installation scripts.
 
-## Pipeline Overview
+## Project Structure
 
-This Jenkins pipeline automates the build process for the bookshelf application:
+### Simple-CICD/
+Jenkins pipeline for building containerized applications:
+- Clones bookshelf application from GitHub
+- Builds Docker image using Jenkinsfile
 
-1. **Clone Repository** - Pulls source code from GitHub
-2. **Build Container** - Creates Docker image from the application
+### shellscript-to-install-jenkins/
+Automated installation scripts:
+- `master.sh` - Sets up Jenkins master server
+- `agent.sh` - Configures Jenkins agent with Docker
 
-## Prerequisites
+### A shellscript-to-install-jenkins/
+Alternative agent installation script with enhanced Docker setup.
 
-- Jenkins server with Docker support
+## Quick Start
+
+1. **Setup Jenkins Master:**
+   ```bash
+   ./shellscript-to-install-jenkins/master.sh
+   ```
+
+2. **Setup Jenkins Agent:**
+   ```bash
+   ./shellscript-to-install-jenkins/agent.sh
+   ```
+
+3. **Deploy Pipeline:**
+   - Create Jenkins job pointing to `Simple-CICD/Jenkinsfile`
+   - Pipeline builds bookshelf application automatically
+
+## Requirements
+
+- Ubuntu/Debian systems
+- sudo privileges
+- Internet connection
 - Jenkins agent labeled `jenkins-agent`
-- Docker installed on the agent
-
-## Usage
-
-1. Create a new Jenkins pipeline job
-2. Point to this repository's `Simple-CICD/Jenkinsfile`
-3. Run the pipeline
-
-## Pipeline Configuration
-
-The pipeline targets the [bookshelf application](https://github.com/MAHIRE-7/bookshelf.git) and builds a Docker image tagged as `bookshelf:latest`.
