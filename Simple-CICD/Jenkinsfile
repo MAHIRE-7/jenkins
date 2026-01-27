@@ -9,19 +9,23 @@ pipeline{
         
         stage("Build Container"){
             steps{
-                sh "docker build -t bookshelf:latest ."
+                sh "docker build -t manodayahire/bookshelf:latest ."
             }
         }
         stage("Push Container"){
             steps{
-                sh "docker login -u manodayahire -p "
-                sh "docker build -t bookshelf:latest ."
+                withCredentials([usernamePassword(credentialsId: 'dockerCred', 
+                                                 usernameVariable: 'USER', 
+                                                 passwordVariable: 'PASS')]){
+                
+                sh "docker login -u $USER -p $PASS "
+                sh "docker build -t manodayahire/bookshelf:latest ."}
             }
         }
 
         stage("Run Container"){
             steps{
-                sh "docker compose up -d"
+                sh "docker compose-up -d"
             }
         }
         
