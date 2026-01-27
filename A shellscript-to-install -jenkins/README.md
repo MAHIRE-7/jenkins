@@ -1,41 +1,28 @@
-# Jenkins Installation Scripts
+# Jenkins Agent Installation Script
 
-Automated shell scripts for setting up Jenkins master and agent nodes on Ubuntu/Debian systems.
+Automated setup script for Jenkins agent nodes with Docker support.
 
-## Scripts
+## What it does
 
-### master.sh
-Installs Jenkins master server with:
-- Java 21 JRE
-- Jenkins from official repository
-- Displays initial admin password
-
-### agent.sh  
-Installs Jenkins agent with:
-- Java 21 JRE
-- Docker for containerized builds
-- Proper user permissions
+- Installs Java 21 JRE (required for Jenkins agent)
+- Installs Docker for containerized builds
+- Configures user permissions for Docker access
 
 ## Usage
 
 ```bash
-# On master node
-chmod +x master.sh
-./master.sh
-
-# On agent node  
 chmod +x agent.sh
 ./agent.sh
 ```
 
-## Prerequisites
+## Requirements
 
 - Ubuntu/Debian system
 - sudo privileges
 - Internet connection
 
-## Post-Installation
+## After Installation
 
-1. Access Jenkins at `http://your-server:8080`
-2. Use displayed admin password for initial setup
-3. Log out/in on agent nodes for Docker permissions
+1. Log out and back in for Docker group changes
+2. Connect agent to Jenkins master server
+3. Agent ready for Docker-based pipeline jobs
