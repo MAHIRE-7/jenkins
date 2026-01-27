@@ -2,7 +2,7 @@ pipeline{
     agent {label 'jenkins-agent'} // Jenkins agent label
     environment{
         IMAGE="manodayahire/notes-app"
-        VERSION=${BUILD_NUMBER}
+        VERSION="${BUILD_NUMBER}"
     }
     stages{
         // Clone source code from GitHub
