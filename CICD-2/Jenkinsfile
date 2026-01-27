@@ -1,0 +1,41 @@
+pipeline{
+    agent {label 'jenkins-agent'} // Jenkins agent label
+    environment{
+        IMAGE="manodayahire/notes-app"
+        VERSION=${BUILD_NUMBER}
+    }
+    stages{
+        // Clone source code from GitHub
+        stage("Code Clone"){
+            steps{
+                git branch: "main", url: "https://github.com/MAHIRE-7/django-notes-app.git"
+            }
+        }
+        // Docker Build Image
+        stage("Docker Image Build"){
+            steps{
+                sh "docker build -t $IMAGE:$VERSION ."
+            }
+        }
+        // Docker Image Push
+        stage("Docker Image Push to DockerHub"){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'dockerCred', 
+                                                 usernameVariable: 'USER', 
+                                                 passwordVariable: 'PASS')]){
+                sh "docker login -u $USER -p $PASS"    
+                sh "docker push $IMAGE:$VERSION"
+            }
+                }
+        }
+        stage("Containers Run"){
+            steps{
+               sh "docker-compose down" 
+               sh "docker-compose up -d"
+            }
+        }
+    }
+
+        
+
+}
