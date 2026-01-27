@@ -13,6 +13,7 @@ echo "Installing Docker on Agent"
 sudo apt-get update
 sudo apt-get install docker.io -y
 sudo usermod -aG docker $USER
+sudo newgrp docker
 echo "Please log out and back in for Docker group changes to take effect"
 
 echo "Installation complete"
