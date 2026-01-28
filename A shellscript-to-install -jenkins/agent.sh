@@ -22,6 +22,7 @@ sleep 2
 echo "Do you want to install SonarQube Scanner? (y/n): "
 read -r choice
 
+
 if [[ $choice == "y" || $choice == "Y" ]]; then
     echo "Installing SonarQube Scanner..."
     sudo apt install unzip -y
