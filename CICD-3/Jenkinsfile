@@ -57,7 +57,7 @@ pipeline{
                                                  passwordVariable: 'GIT_PASS')]){
                                                      sh""" 
                                                       echo "Updating Kubernetes manifest with new image tag"
-                                                            git pull
+                                                        
 
             sed -i 's|image: .*|image: ${IMAGE}:${VERSION}|' k8s/tic-tac-toe-deployment.yml
 
