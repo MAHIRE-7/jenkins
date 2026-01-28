@@ -58,7 +58,7 @@ pipeline{
                                                      sh""" 
                                                       echo "Updating Kubernetes manifest with new image tag"
                                                         
-
+            git checkout release
             sed -i 's|image: .*|image: ${IMAGE}:${VERSION}|' k8s/tic-tac-toe-deployment.yml
 
             git config user.email "manodayahire786@gmail.com"
