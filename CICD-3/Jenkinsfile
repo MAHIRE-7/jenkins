@@ -1,0 +1,75 @@
+pipeline{
+    agent {label 'jenkins-agent'}
+     environment {
+        IMAGE = "manodayahire/tic-tac-toe-app"
+        VERSION = "${BUILD_NUMBER}"
+    }
+    
+    stages{
+        stage("Code Clone"){
+            steps{
+                git url: "https://github.com/MAHIRE-7/Tic-Tac-Toe_CICD.git", branch: "main"
+            }
+        }
+         stage("SonarQube Scan") {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh """
+                    sonar-scanner \
+                      -Dsonar.projectKey=tic-tac-toe \
+                      -Dsonar.sources=. \
+                    """
+                }
+            }
+        }
+
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage("Docker Build"){
+            steps{
+                sh "docker build -t $IMAGE:$VERSION ."
+            }
+        }
+        stage("Docker Push"){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'dockerCred', 
+                                                 usernameVariable: 'USER', 
+                                                 passwordVariable: 'PASS')]){
+                sh "docker login -u ${USER} -p ${PASS} "
+                sh "docker push $IMAGE:$VERSION"
+                                                 }
+            }
+        }
+        stage("Image Cleanup"){
+            steps{
+                sh "docker rmi $IMAGE:$VERSION"
+            }
+        }
+        stage("K8S Tag Update"){
+            steps{
+            withCredentials([usernamePassword(credentialsId: 'githuCredentials', 
+                                                 usernameVariable: 'GIT_USER', 
+                                                 passwordVariable: 'GIT_PASS')]){
+                                                     sh""" 
+                                                      echo "Updating Kubernetes manifest with new image tag"
+
+            sed -i 's|image: .*|image: ${IMAGE}:${VERSION}|' k8s/tic-tac-toe-deployment.yml
+
+            git config user.email "manodayahire786@gmail.com"
+            git config user.name "Manoday Ahire"
+
+            git add k8s/tic-tac-toe-deployment.yml
+            git commit -m  "[ci skip] update image tag"
+
+            git push https://${GIT_USER}:${GIT_PASS}@github.com/MAHIRE-7/Tic-Tac-Toe_CICD.git HEAD:main
+                                                     """
+                                                 }
+            }
+        }
+        }
+    }
