@@ -65,7 +65,7 @@ pipeline{
             git config user.name "Manoday Ahire"
 
             git add k8s/tic-tac-toe-deployment.yml
-            git commit -m  "[ci skip] update image tag"
+            git commit -m  "K8s Image Tag Updated With $IMAGE:$VERSION "
 
             git push https://${GIT_USER}:${GIT_PASS}@github.com/MAHIRE-7/Tic-Tac-Toe_CICD.git HEAD:release
                                                      """
