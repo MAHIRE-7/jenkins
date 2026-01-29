@@ -14,12 +14,8 @@ pipeline{
          stage("SonarQube Scan") {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh """
-                    sonar-scanner \
-                      -Dsonar.projectKey=tic-tac-toe \
-                      -Dsonar.sources=. \
-                    """
-                }
+    sh "sonar-scanner -Dsonar.projectKey=wordtopdf -Dsonar.sources=."
+                                            }
             }
         }
 
