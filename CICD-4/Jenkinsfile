@@ -5,20 +5,42 @@ pipeline{
         VERSION = "${BUILD_NUMBER}"
     }
     
+    
     stages{
+        // GIT CODE CLONE
         stage("Code Clone"){
             steps{
                 git url: "https://github.com/MAHIRE-7/wordtopdf.git", branch: "main"
             }
         }
+
+        // OWASP CVE check
+        stage("OWASP Dependency Scan") {
+            steps {
+                dependencyCheck additionalArguments: '''
+                --scan .
+                --format HTML
+                --disableAssembly
+                ''',
+                odcInstallation: 'owasp'
+            }
+        }
+        
+        //OWASP Report generation
+        stage("OWASP Report") {
+            steps {
+                archiveArtifacts artifacts: '**/dependency-check-report.html', fingerprint: true
+            }
+        }
+        //SonarQube Scan
          stage("SonarQube Scan") {
             steps {
                 withSonarQubeEnv('sonarqube') {
-    sh "sonar-scanner -Dsonar.projectKey=wordtopdf -Dsonar.sources=."
+                sh "sonar-scanner -Dsonar.projectKey=wordtopdf -Dsonar.sources=."
                                             }
             }
         }
-
+        // SonarQube QualityGates Scan
         stage("Quality Gate") {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
@@ -26,11 +48,15 @@ pipeline{
                 }
             }
         }
+
+        //Docker Build
         stage("Docker Build"){
             steps{
                 sh "docker build -t $IMAGE:$VERSION ."
             }
         }
+
+        // Docker Image Push to Dockerhub
         stage("Docker Push"){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerCredentials', 
@@ -41,11 +67,15 @@ pipeline{
                                                  }
             }
         }
+
+        // Docker Image cleanup from local
         stage("Image Cleanup"){
             steps{
                 sh "docker rmi $IMAGE:$VERSION"
             }
         }
+
+        // K8s Tag Update
         stage("K8S Tag Update"){
             steps{
             withCredentials([usernamePassword(credentialsId: 'gitCred', 
