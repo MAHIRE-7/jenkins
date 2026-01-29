@@ -33,7 +33,7 @@ pipeline{
         }
         stage("Docker Push"){
             steps{
-                withCredentials([usernamePassword(credentialsId: 'dockerCred', 
+                withCredentials([usernamePassword(credentialsId: 'dockerCredentials', 
                                                  usernameVariable: 'USER', 
                                                  passwordVariable: 'PASS')]){
                 sh "docker login -u ${USER} -p ${PASS} "
@@ -48,7 +48,7 @@ pipeline{
         }
         stage("K8S Tag Update"){
             steps{
-            withCredentials([usernamePassword(credentialsId: 'githuCredentials', 
+            withCredentials([usernamePassword(credentialsId: 'gitCred', 
                                                  usernameVariable: 'GIT_USER', 
                                                  passwordVariable: 'GIT_PASS')]){
                                                      sh""" 
@@ -63,7 +63,7 @@ pipeline{
             git add k8s/tic-tac-toe-deployment.yml
             git commit -m  "K8s Image Tag Updated With $IMAGE:$VERSION "
 
-            git push https://${GIT_USER}:${GIT_PASS}@github.com/MAHIRE-7/Tic-Tac-Toe_CICD.git HEAD:release
+            git push https://${GIT_USER}:${GIT_PASS}@github.com/MAHIRE-7/wordtopdf HEAD:release
                                                      """
                                                  }
             }
