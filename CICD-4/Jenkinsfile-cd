@@ -34,11 +34,13 @@ pipeline{
             }
         }
 
-        stage("Deploy") {
+        stage("Deploy on ArgoCD") {
             steps {
                 sh "echo Deploying image tag ${IMAGE_TAG}"
             }
             }
+
+        stage("Monitoring")
 
     }
 }
