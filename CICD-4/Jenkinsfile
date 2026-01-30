@@ -15,21 +15,20 @@ pipeline{
         }
 
         // OWASP CVE check
-      stage("OWASP Dependency Scan") {
-    steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-            dependencyCheck(
-                odcInstallation: 'owasp',
-                additionalArguments: '''
-                  --scan .
-                  --format HTML
-                  --disableAssembly
-                  --failOnCVSS 11
-                '''
-            )
+     stage("OWASP Dependency Scan") {
+            steps {
+                dependencyCheck(
+                    additionalArguments: '''
+                    --scan .
+                    --format HTML
+                    --data /tmp/odc-data
+                    --disableAssembly
+                    ''',
+                    odcInstallation: 'owasp'
+                )
+            }
         }
-    }
-}
+
         
         //OWASP Report generation
         stage("OWASP Report") {
