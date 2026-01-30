@@ -74,7 +74,9 @@ pipeline{
         // Docker Image cleanup from local
         stage("Image Cleanup"){
             steps{
-                sh "docker rmi $IMAGE:$VERSION"
+
+                DEL_VERSION = $((VERSION-2))
+                sh "docker rmi $IMAGE:$DEL_VERSION"
             }
         }
 
@@ -93,7 +95,7 @@ pipeline{
             git config user.email "manodayahire786@gmail.com"
             git config user.name "Manoday Ahire"
 
-            git add k8s/tic-tac-toe-deployment.yml
+            git add k8s/app-deployment.yml
             git commit -m  "K8s Image Tag Updated With $IMAGE:$VERSION "
 
             git push https://${GIT_USER}:${GIT_PASS}@github.com/MAHIRE-7/wordtopdf HEAD:release
