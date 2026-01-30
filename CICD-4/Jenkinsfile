@@ -74,9 +74,18 @@ pipeline{
         // Docker Image cleanup from local
         stage("Image Cleanup"){
             steps{
+                 sh '''
+                    echo "Latest version: $VERSION"
 
-               ''' sh "DEL_VERSION = $((VERSION-2)) '''
-                sh "docker rmi $IMAGE:$DEL_VERSION"
+                    DEL_VERSION=$((VERSION-2))
+
+                    if [ "$DEL_VERSION" -gt 0 ]; then
+                        echo "Deleting image tag: $DEL_VERSION"
+                        docker rmi $IMAGE:$DEL_VERSION || true
+                    else
+                        echo "No old image to delete"
+                    fi
+                    '''
             }
         }
 
