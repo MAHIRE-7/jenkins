@@ -16,23 +16,23 @@ pipeline{
 
         // OWASP CVE check
         stage("OWASP Dependency Scan") {
-            steps {
-                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                            withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_KEY')]) {
-                                sh '''
-                                /opt/dependency-check/bin/dependency-check.sh \
-                                --scan . \
-                                --format HTML \
-                                --data /tmp/odc-data \
-                                --nvdApiKey "$NVD_KEY" \
-                                --nvdApiDelay 8000 \
-                                --nvdMaxRetryCount 10 \
-                                --disableAssembly
-                                '''
-                            }
-                        }
-                    }
-                }
+    steps {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh '''
+              mkdir -p owasp-report
+
+              /opt/dependency-check/bin/dependency-check.sh \
+              --scan . \
+              --format HTML \
+              --out owasp-report \
+              --data /tmp/odc-data \
+              --noupdate \
+              --disableAssembly
+            '''
+        }
+    }
+}
+
 
 
 
