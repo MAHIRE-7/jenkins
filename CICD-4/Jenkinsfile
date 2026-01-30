@@ -73,7 +73,12 @@ pipeline{
         stage("Trivy Image Scan"){
             steps {
         sh """
-          trivy image --format html --output trivy-report.html  manodayahire/wordtopdf:${BUILD_NUMBER} || true
+                        trivy image \
+                --format template \
+                --template "@html.tpl" \
+                --output trivy-report.html \
+                manodayahire/wordtopdf:33 || true
+
         """
         /**
          sh """
