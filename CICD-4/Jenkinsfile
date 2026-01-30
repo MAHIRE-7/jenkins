@@ -15,19 +15,24 @@ pipeline{
         }
 
         // OWASP CVE check
-     stage("OWASP Dependency Scan") {
-            steps {
-                dependencyCheck(
-                    additionalArguments: '''
-                    --scan .
-                    --format HTML
-                    --data /tmp/odc-data
-                    --disableAssembly
-                    ''',
-                    odcInstallation: 'owasp'
-                )
+        stage("OWASP Dependency Scan") {
+                steps {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                        withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_KEY')]) {
+                            dependencyCheck(
+                                additionalArguments: """
+                                --scan .
+                                --format HTML
+                                --nvdApiKey ${NVD_KEY}
+                                --data /tmp/odc-data
+                                """,
+                                odcInstallation: 'owasp'
+                            )
+                        }
+                    }
+                }
             }
-        }
+
 
         
         //OWASP Report generation
