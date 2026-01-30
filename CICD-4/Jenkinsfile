@@ -20,7 +20,7 @@ pipeline{
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_KEY')]) {
                                 sh '''
-                                dependency-check.sh \
+                                /opt/dependency-check/bin/dependency-check.sh \
                                 --scan . \
                                 --format HTML \
                                 --data /tmp/odc-data \
