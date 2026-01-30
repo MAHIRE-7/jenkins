@@ -15,14 +15,17 @@ pipeline{
         }
 
         // OWASP CVE check
-        stage("OWASP Dependency Scan") {
+      stage("OWASP Dependency Scan") {
             steps {
-                dependencyCheck additionalArguments: '''
-                --scan .
-                --format HTML
-                --disableAssembly
-                ''',
-                odcInstallation: 'owasp'
+                dependencyCheck(
+                    odcInstallation: 'owasp',
+                    additionalArguments: '''
+                    --scan .
+                    --format HTML
+                    --disableAssembly
+                    --failOnCVSS 11
+                    '''
+                )
             }
         }
         
