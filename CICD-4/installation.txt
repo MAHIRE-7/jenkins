@@ -29,3 +29,9 @@ Manage Jenkins → Tools -- Scroll down → Dependency-Check
 Add:
 Name: owasp
 ✔ Install automatically
+
+
+## ARGOCD
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
