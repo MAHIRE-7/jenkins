@@ -126,11 +126,13 @@ pipeline{
     }
 }
 
-post {
+
+        
+        }
+
+        post {
     always {
         archiveArtifacts artifacts: 'trivy-report.html'
     }
 }
-        
-        }
     }
