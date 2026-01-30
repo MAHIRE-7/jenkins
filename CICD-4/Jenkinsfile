@@ -78,7 +78,7 @@ pipeline{
         // K8s Tag Update
         stage("K8S Tag Update"){
             steps{
-            withCredentials([usernamePassword(credentialsId: 'gitCred', 
+            withCredentials([usernamePassword(credentialsId: 'gitCredentials', 
                                                  usernameVariable: 'GIT_USER', 
                                                  passwordVariable: 'GIT_PASS')]){
                                                      sh""" 
