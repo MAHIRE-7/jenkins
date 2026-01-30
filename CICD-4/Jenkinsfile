@@ -70,6 +70,24 @@ pipeline{
             }
         }
 
+        stage("Trivy Image Scan"){
+            steps {
+        sh """
+          trivy image --format html --output trivy-report.html  manodayahire/wordtopdf:${BUILD_NUMBER} || true
+        """
+        /**
+         sh """
+          trivy image \
+          --exit-code 1 \
+          --severity HIGH,CRITICAL \
+          manodayahire/wordtopdf:${BUILD_NUMBER}
+        """
+        //HIGH/CRITICAL mile → pipeline FAIL block on HIGH/CRITICAL
+        **/
+
+                  }
+        }
+
         // Docker Image Push to Dockerhub
         stage("Docker Push"){
             steps{
@@ -105,6 +123,12 @@ pipeline{
               parameters: [
                 string(name: 'IMAGE_TAG', value: "${BUILD_NUMBER}")
               ]
+    }
+}
+
+post {
+    always {
+        archiveArtifacts artifacts: 'trivy-report.html'
     }
 }
         
