@@ -75,7 +75,7 @@ pipeline{
         stage("Image Cleanup"){
             steps{
 
-                sh "DEL_VERSION = $((VERSION-2))"
+               ''' sh "DEL_VERSION = $((VERSION-2)) '''
                 sh "docker rmi $IMAGE:$DEL_VERSION"
             }
         }
