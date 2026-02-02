@@ -1,0 +1,10 @@
+pipeline{
+    agent {label 'jenkins-agent'}
+    stages{
+        stage("Code Clone"){
+            steps{
+                git url: "https://github.com/MAHIRE-7/expense-tracker-CICD", branch: "main"
+            }
+        }
+    }
+}
