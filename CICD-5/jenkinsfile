@@ -1,10 +1,35 @@
 pipeline{
     agent {label 'jenkins-agent'}
+    environment{
+        VERSION="${BUILD_NUMBER}"
+        IMAGE="188381035573.dkr.ecr.ap-south-1.amazonaws.com/expensetracker"
+    }
     stages{
         stage("Code Clone"){
             steps{
                 git url: "https://github.com/MAHIRE-7/expense-tracker-CICD", branch: "main"
             }
         }
+        stage("Build Image"){
+            steps{
+                sh "docker build -t $IMAGE:$VERSION ."
+            }
+        }
+        stage("Push Image to ECR"){
+            steps{
+                sh '''
+                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 188381035573.dkr.ecr.ap-south-1.amazonaws.com
+                    docker push $IMAGE:$VERSION
+                '''
+            }
+        }
+        stage("Image Clean"){
+            steps{
+                sh "docker rmi $IMAGE:$VERSION"
+            }
+        }
+
     }
+
+
 }
